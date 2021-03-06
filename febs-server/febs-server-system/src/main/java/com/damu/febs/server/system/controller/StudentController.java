@@ -46,24 +46,8 @@ public class StudentController {
     @PostMapping("/saveStudentBatch")
     public Result saveStudentBatch(@RequestBody Map map) {
         log.info(map.toString());
-        String name = (String) map.get("name");
-        String remark = (String) map.get("remark");
-        String number = (String) map.get("number");
-        int num = Integer.parseInt(number);
 
-        Date date = new Date();
-        List<Student> studentList = new ArrayList<>();
-        int i;
-
-        for (i = 0; i < num; i++) {
-            Student student1 = new Student(name, 26, "男", date, "美丽大山里" + i, remark);
-            studentList.add(student1);
-        }
-        boolean b = studentService.saveBatch(studentList);
-        Result result = new Result();
-        result.setData(i);
-        result.setSuccess(b);
-        return result;
+        return ResultBuilder.success(studentService.saveStudentByBatch(map));
     }
 
     @PostMapping("/addStudentBatch")

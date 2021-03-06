@@ -47,6 +47,7 @@ public class TimeCostAspect {
             // 记录异常信息
             long endTime = System.currentTimeMillis();
             log.error("======>请求[xxx]接口异常！耗时:{}", (endTime - startTime));
+            e.printStackTrace();
         }
         return null;
     }
