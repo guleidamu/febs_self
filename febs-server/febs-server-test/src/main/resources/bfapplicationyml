@@ -1,0 +1,42 @@
+server:
+  port: 5202
+
+spring:
+  application:
+    name: FEBS-Server-Test
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration
+#spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.url}:3809
+
+#eureka:
+#  instance:
+#    lease-renewal-interval-in-seconds: 20
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    instance-info-replication-interval-seconds: 30
+#    registry-fetch-interval-seconds: 3
+#    serviceUrl:
+##      defaultZone: http://febs:123456@localhost:8001/register/eureka/
+#      defaultZone: http://localhost:8761/eureka/
+
+ #到认证服务器里校验当前请求头中的令牌是否为合法的令牌；
+ #通过当前令牌获取对应的用户信息。
+ #这边的地址一定要配置好，才能访问到认证中心
+security:
+  oauth2:
+    resource:
+      id: ${spring.application.name}
+      user-info-uri: http://localhost:5301/auth/user
+
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  shareSecurityContext: true

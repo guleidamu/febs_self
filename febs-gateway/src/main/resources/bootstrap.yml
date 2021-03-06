@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: FEBS-Gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.url}:3809
+      config:
+        server-addr: ${nacos.url}:3809
+        group: DEFAULT_GROUP
+        prefix: febs-gateway
+        file-extension: yaml
