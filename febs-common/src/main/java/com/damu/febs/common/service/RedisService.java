@@ -1,5 +1,6 @@
 package com.damu.febs.common.service;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -547,6 +548,22 @@ public class RedisService {
         } catch (Exception e) {
             e.printStackTrace();
             return 0L;
+        }
+    }
+
+        public static <T> String beanToString(T value) {
+        if(value == null) {
+            return null;
+        }
+        Class<?> clazz = value.getClass();
+        if(clazz == int.class || clazz == Integer.class) {
+            return ""+value;
+        }else if(clazz == String.class) {
+            return (String)value;
+        }else if(clazz == long.class || clazz == Long.class) {
+            return ""+value;
+        }else {
+            return JSON.toJSONString(value);
         }
     }
 }
