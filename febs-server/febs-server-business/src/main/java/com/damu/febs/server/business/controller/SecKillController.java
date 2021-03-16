@@ -74,8 +74,8 @@ public class SecKillController implements InitializingBean {
         for (GoodsBo goods : goodsList) {
 //            redisTemplate.opsForValue().set(goods.getId() + "", goods.getStockCount(), ConstTime.RedisCacheExtime.GOODS_LIST);
 //            localOverMap.put(goods.getId(), false);
-            redisService.set(GoodsKey.getSeckillGoodsStock, "" + goods.getId(), goods.getStockCount(), ConstTime.RedisCacheExtime.GOODS_LIST);
-            redisService.set()
+//            redisService.set(GoodsKey.getSeckillGoodsStock, "" + goods.getId(), goods.getStockCount(), ConstTime.RedisCacheExtime.GOODS_LIST);
+//            redisService.set()
             localOverMap.put(goods.getId(), false);
         }
         log.info("没啥事，就想看看初始化有没有用得到");
