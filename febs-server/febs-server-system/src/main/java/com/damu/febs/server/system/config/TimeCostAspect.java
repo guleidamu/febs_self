@@ -32,7 +32,7 @@ public class TimeCostAspect {
             // 定义返回对象、得到方法需要的参数
             Object resultData = null;
             Object[] args = joinPoint.getArgs();
-            Object apiName = args[0];
+//            Object apiName = args[0];
             // 调用钉钉接口
             log.info("======>请求[xxx]接口开始,参数:{}", args);
             log.info("请求ip：" + request.getRemoteAddr());

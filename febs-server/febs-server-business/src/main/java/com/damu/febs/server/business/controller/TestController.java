@@ -1,6 +1,7 @@
 package com.damu.febs.server.business.controller;
 
-import com.damu.secKill.Thread.ThreadClient;
+
+import com.damu.febs.server.business.Thread.ThreadClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;

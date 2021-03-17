@@ -1,6 +1,7 @@
 package com.damu.febs.server.business.mq;
 
-import com.damu.febs.server.business.config.RedisService;
+
+import com.damu.febs.server.business.config.RedisJedisService;
 import com.damu.febs.server.business.data.entity.SeckillOrder;
 import com.damu.febs.server.business.data.entity.TulingOrder;
 import com.damu.febs.server.business.data.entity.User;
@@ -21,8 +22,11 @@ import javax.annotation.Resource;
 @Slf4j
 public class MQReceiver {
 
+//    @Autowired
+//    RedisService redisService;
+
     @Autowired
-    RedisService redisService;
+    RedisJedisService redisJedisService;
 
     @Autowired
     SeckillGoodsService goodsService;
@@ -39,7 +43,7 @@ public class MQReceiver {
     @RabbitListener(queues = MQConfig.MIAOSHA_QUEUE)
     public void receive(String message) {
         log.info("receive message:" + message);
-        SeckillMessage seckillMessage = RedisService.stringToBean(message, SeckillMessage.class);
+        SeckillMessage seckillMessage = redisJedisService.stringToBean(message, SeckillMessage.class);
         User user = seckillMessage.getUser();
         long goodsId = seckillMessage.getGoodsId();
         GoodsBo goodsBo = goodsService.getseckillGoodsBoByGoodsId(goodsId);
@@ -60,7 +64,7 @@ public class MQReceiver {
     @RabbitListener(queues = MQConfig.MIAOSHA_QUEUE_MQ)
     public void receiveOnlyMq(String message) {
         log.info("receive message:" + message);
-        SeckillMessage seckillMessage = RedisService.stringToBean(message, SeckillMessage.class);
+        SeckillMessage seckillMessage = redisJedisService.stringToBean(message, SeckillMessage.class);
         User user = seckillMessage.getUser();
         long goodsId = seckillMessage.getGoodsId();
         GoodsBo goodsBo = goodsService.getseckillGoodsBoByGoodsId(goodsId);
@@ -82,7 +86,7 @@ public class MQReceiver {
     public void tuLingSecKill(String message) {
 
         log.info("新增数据receive message:" + message);
-        TulingOrder tulingOrder = RedisService.stringToBean(message, TulingOrder.class);
+        TulingOrder tulingOrder = redisJedisService.stringToBean(message, TulingOrder.class);
 //        log.info("新增数据:" + tulingOrder);
         tulingOrderMapper.insert(tulingOrder);
     }

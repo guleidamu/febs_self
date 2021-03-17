@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: FEBS-Server-business
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.url}:3809
+      config:
+        server-addr: ${nacos.url}:3809
+        group: DEFAULT_GROUP
+        prefix: febs-server-business
+        file-extension: yaml

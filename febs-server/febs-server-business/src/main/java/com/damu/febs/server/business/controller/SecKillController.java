@@ -1,6 +1,7 @@
 package com.damu.febs.server.business.controller;
 
 import com.damu.febs.common.service.RedisService;
+import com.damu.febs.server.business.config.RedisJedisService;
 import com.damu.febs.server.business.data.dto.GoodsInfo;
 import com.damu.febs.server.business.data.entity.SeckillOrder;
 import com.damu.febs.server.business.data.entity.User;
@@ -53,6 +54,9 @@ public class SecKillController implements InitializingBean {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    RedisJedisService redisJedisService;
+
     private HashMap<Long, Boolean> localOverMap = new HashMap<Long, Boolean>();
 
     /**
@@ -85,7 +89,7 @@ public class SecKillController implements InitializingBean {
     @ResponseBody
     public Result doLogin(@RequestBody GoodsInfo goodsInfo) {
         //到时候每个接口做一个拦截token信息
-        User userByKey = redisService.getByKey(goodsInfo.getUserKey(), User.class);
+        User userByKey = redisJedisService.getByKey(goodsInfo.getUserKey(), User.class);
         if (userByKey == null) {
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
@@ -101,7 +105,7 @@ public class SecKillController implements InitializingBean {
             return Result.error(CodeMsg.MIAO_SHA_OVER);
         }/**/
         //预减库存
-        long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsInfo.getGoodsId());
+        long stock = redisJedisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsInfo.getGoodsId());
         if (stock < 1) {
             localOverMap.put(goodsInfo.getGoodsId(), true);
             return Result.error(CodeMsg.MIAO_SHA_OVER);
@@ -130,7 +134,7 @@ public class SecKillController implements InitializingBean {
     @ResponseBody
     public Result secKillNotCheckUserNotMQ(@RequestBody GoodsInfo goodsInfo) {
         //到时候接口做一个拦截token信息
-        User userByKey = redisService.getByKey(goodsInfo.getUserKey(), User.class);
+        User userByKey = redisJedisService.getByKey(goodsInfo.getUserKey(), User.class);
         if (userByKey == null) {
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
@@ -159,12 +163,12 @@ public class SecKillController implements InitializingBean {
     @ResponseBody
     public Result secKillWithRedis(@RequestBody GoodsInfo goodsInfo) {
         //到时候接口做一个拦截token信息
-        User userByKey = redisService.getByKey(goodsInfo.getUserKey(), User.class);
+        User userByKey = redisJedisService.getByKey(goodsInfo.getUserKey(), User.class);
         if (userByKey == null) {
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
         //预减库存,直接减也会出错(redis库存出错，数据库库存没错)，
-        long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsInfo.getGoodsId());
+        long stock = redisJedisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsInfo.getGoodsId());
         if (stock < 1) {
             localOverMap.put(goodsInfo.getGoodsId(), true);
             return Result.error(CodeMsg.MIAO_SHA_OVER_REDIS);
@@ -195,7 +199,7 @@ public class SecKillController implements InitializingBean {
     @ResponseBody
     public Result secKillWithMq(@RequestBody GoodsInfo goodsInfo) {
         //到时候接口做一个拦截token信息
-        User userByKey = redisService.getByKey(goodsInfo.getUserKey(), User.class);
+        User userByKey = redisJedisService.getByKey(goodsInfo.getUserKey(), User.class);
         if (userByKey == null) {
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
