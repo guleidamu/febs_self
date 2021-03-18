@@ -2,6 +2,7 @@ package com.damu.febs.server.business.controller;
 
 
 import com.damu.febs.common.service.RedisService;
+import com.damu.febs.server.business.config.RedisJedisService;
 import com.damu.febs.server.business.data.dto.LoginParam;
 import com.damu.febs.server.business.data.entity.User;
 import com.damu.febs.server.business.redis.ConstTime;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     @Autowired
-    RedisService redisService;
+    RedisJedisService redisJedisService;
 
     @Autowired
     private UserService userService;
@@ -33,7 +34,7 @@ public class UserController {
         Result<User> login = userService.login(loginParam);
         if (login.isSuccess()){
             CookieUtil.writeLoginToken(response,session.getId());
-            redisService.set(UserKey.getByName , session.getId() ,login.getData(), ConstTime.RedisCacheExtime.REDIS_SESSION_EXTIME );
+            redisJedisService.set(UserKey.getByName , session.getId() ,login.getData(), ConstTime.RedisCacheExtime.REDIS_SESSION_EXTIME );
         }
         return login;
     }
