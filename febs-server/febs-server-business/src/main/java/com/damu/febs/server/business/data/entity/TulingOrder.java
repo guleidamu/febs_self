@@ -19,7 +19,7 @@ public class TulingOrder {
     private Long goodsId;
 
     @TableField("user_id")
-    private Integer userId;
+    private Long userId;
 
     @TableField("order_id")
     private Integer orderId;
