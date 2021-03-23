@@ -6,6 +6,7 @@ import com.damu.febs.common.service.RedisService;
 import com.damu.febs.common.utils.FebsUtil;
 import com.damu.febs.server.business.data.entity.SeckillGoods;
 import com.damu.febs.server.business.data.entity.TulingOrder;
+import com.damu.febs.server.business.data.message.SeckillMessage;
 import com.damu.febs.server.business.mapper.SeckillGoodsMapper;
 import com.damu.febs.server.business.mapper.TulingOrderMapper;
 import com.damu.febs.server.business.mq.MQSender;
@@ -52,6 +53,12 @@ public class TuLingController {
     @Transactional
     @GetMapping("/deductStock")
     public String deductStock() {
+        CurrentUser currentUser = new CurrentUser();
+        try {
+            currentUser = FebsUtil.getCurrentUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String lockKey = "lockKey";
         Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, "damu",6000, TimeUnit.MILLISECONDS);
         if (!result) {
@@ -70,6 +77,7 @@ public class TuLingController {
             seckillGoods.setStockCount(realStock);
             seckillGoodsMapper.updateById(seckillGoods);
             TulingOrder tulingOrder = new TulingOrder();
+            tulingOrder.setUserId(currentUser.getUserId());
             tulingOrder.setGoodsId(5L);
             tulingOrder.setRemain(realStock);
             tulingOrder.setPort(port);
@@ -83,6 +91,42 @@ public class TuLingController {
         }
         return "请求完毕";
     }
+
+    @Transactional
+    @GetMapping("/deductStockMq")
+    public String deductStockMq() {
+        CurrentUser currentUser = new CurrentUser();
+        try {
+            currentUser = FebsUtil.getCurrentUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String lockKey = "lockKey";
+        Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, "damu",6000, TimeUnit.MILLISECONDS);
+        if (!result) {
+            return "拥挤中，请稍等一会重试";
+        }
+        String stockString = (String) redisService.get("stock");
+        Integer stock = Integer.parseInt(stockString);
+        if (stock > 0) {
+            int realStock = stock - 1;
+            redisService.set("stock", realStock + "");
+            log.info("扣减库存成功，剩余库存：" + realStock);
+            TulingOrder tulingOrder = new TulingOrder();
+            tulingOrder.setUserId(currentUser.getUserId());
+            tulingOrder.setGoodsId(5L);
+            tulingOrder.setRemain(realStock);
+            tulingOrder.setPort(port);
+            tulingOrder.setCreateTime(new Date());
+            mqSender.sendSeckillMessageTuLing(tulingOrder);
+            log.info("库存stock:{}", stock);
+            stringRedisTemplate.delete(lockKey);
+        } else {
+            log.info("库存不足，扣减库存失败");
+        }
+        return "请求完毕";
+    }
+
 
     @Transactional
     @GetMapping("/deductStockSynchronized")
@@ -135,7 +179,6 @@ public class TuLingController {
     @Transactional
     @GetMapping("/deductStockLock")
     public String deductStockLock() {
-        //reentrantLock是一个类，记得在方法外面执行
         lock.lock();
         log.info("get lock" + lock.hashCode());
         CurrentUser currentUser = new CurrentUser();
@@ -150,16 +193,15 @@ public class TuLingController {
             if (stock > 0) {
                 int realStock = stock - 1;
                 redisService.set("stock", realStock + "");
-                log.info("扣减库存成功，，,,剩余库存：" + realStock);
+                log.info("扣减库存成功，,,剩余库存：" + realStock);
                 SeckillGoods seckillGoods = new SeckillGoods();
-                seckillGoods.setStockCount(realStock);
                 seckillGoods.setId(5L);
+                seckillGoods.setStockCount(realStock);
                 seckillGoodsMapper.updateById(seckillGoods);
                 TulingOrder tulingOrder = new TulingOrder();
                 tulingOrder.setUserId(currentUser == null ? null : currentUser.getUserId());
-                tulingOrder.setRemain(realStock);
                 tulingOrder.setGoodsId(5L);
-
+                tulingOrder.setRemain(realStock);
                 tulingOrder.setPort(port);
                 tulingOrder.setCreateTime(new Date());
                 tulingOrderMapper.insert(tulingOrder);
