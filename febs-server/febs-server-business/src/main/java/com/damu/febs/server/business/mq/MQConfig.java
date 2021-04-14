@@ -1,101 +1,110 @@
 package com.damu.febs.server.business.mq;
 
-import org.springframework.amqp.core.Queue;
+//import com.rabbitmq.client.ConnectionFactory;
+
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Component
 @Configuration
 public class MQConfig {
 
+    //    @Autowired
+//    RabbitAdmin rabbitAdmin;
+//
     public static final String MIAOSHA_QUEUE = "seckill.queue";
     public static final String MIAOSHA_QUEUE_MQ = "seckill.queue.mq";
     public static final String TULING_MIAOSHA_QUEUE_MQ = "seckill.queue.tuLing";
-    public static final String QUEUE = "queue";
-	/*public static final String TOPIC_QUEUE1 = "topic.queue1";
-	public static final String TOPIC_QUEUE2 = "topic.queue2";
-	public static final String HEADER_QUEUE = "header.queue";
-	public static final String TOPIC_EXCHANGE = "topicExchage";
-	public static final String FANOUT_EXCHANGE = "fanoutxchage";
-	public static final String HEADERS_EXCHANGE = "headersExchage";*/
+    public static final String SIMPLE_QUEUE = "simple.queue";
+    public static final String DEAD_QUEUE = "dead_queue";
+    public static final String QUEUE_INFORM_EMAIL = "queue_inform_email";
+    public static final String EXCHANGE_TOPICS_INFORM = "exchange_topics_inform";
+    public static final String ROUTINGKEY_EMAIL = "inform.#.email.#";
+    public static final String EXCHANGE = "exchange";
+    //以下为死信队列
 
-    @Bean
-    public MessageConverter getMessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
-    @Bean
-    public Queue queue() {
-        return new Queue(QUEUE, true);
-    }
-    /**
-     * Direct模式 交换机Exchange
-     * */
-	/*@Bean
-	public Queue queue() {
-		return new Queue(QUEUE, true);
-	}
-	@Bean
-	public DirectExchange topicDirect(){
-		return new DirectExchange(TOPIC_EXCHANGE);
-	}
+    private static final String DEAD_EXCHANGE = "x-dead-letter-exchange";
 
-	*//**
-     * Topic模式 交换机Exchange
-     * *//*
-	@Bean
-	public Queue topicQueue1() {
-		return new Queue(TOPIC_QUEUE1, true);
-	}
-	@Bean
-	public Queue topicQueue2() {
-		return new Queue(TOPIC_QUEUE2, true);
-	}
-	@Bean
-	public TopicExchange topicExchage(){
-		return new TopicExchange(TOPIC_EXCHANGE);
-	}
-	@Bean
-	public Binding topicBinding1() {
-		return BindingBuilder.bind(topicQueue1()).to(topicExchage()).with("topic.key1");
-	}
-	@Bean
-	public Binding topicBinding2() {
-		return BindingBuilder.bind(topicQueue2()).to(topicExchage()).with("topic.#");
-	}
-	*//**
-     * Fanout模式 交换机Exchange
-     * *//*
-	@Bean
-	public FanoutExchange fanoutExchage(){
-		return new FanoutExchange(FANOUT_EXCHANGE);
-	}
-	@Bean
-	public Binding FanoutBinding1() {
-		return BindingBuilder.bind(topicQueue1()).to(fanoutExchage());
-	}
-	@Bean
-	public Binding FanoutBinding2() {
-		return BindingBuilder.bind(topicQueue2()).to(fanoutExchage());
-	}
-	*//**
-     * Header模式 交换机Exchange
-     * *//*
-	@Bean
-	public HeadersExchange headersExchage(){
-		return new HeadersExchange(HEADERS_EXCHANGE);
-	}
-	@Bean
-	public Queue headerQueue1() {
-		return new Queue(HEADER_QUEUE, true);
-	}
-	@Bean
-	public Binding headerBinding() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("header1", "value1");
-		map.put("header2", "value2");
-		return BindingBuilder.bind(headerQueue1()).to(headersExchage()).whereAll(map).match();
-	}
-	*/
+    //声明交换机
+    @Bean(EXCHANGE_TOPICS_INFORM)
+    public Exchange EXCHANGE_TOPICS_INFORM() {
+        return ExchangeBuilder.topicExchange(EXCHANGE_TOPICS_INFORM).durable(true).build();
+    }
+
+    //声明QUEUE_INFORM_EMAIL队列，配置死信队列需要的参数
+    @Bean(QUEUE_INFORM_EMAIL)
+    public Queue QUEUE_INFORM_EMAIL() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("x-dead-letter-exchange", DEAD_EXCHANGE);
+        map.put("x-dead-letter-routing-key", "dev");
+        return new Queue(QUEUE_INFORM_EMAIL, true, false, false, map);
+    }
+
+    //    ROUTINGKEY_EMAIL队列绑定交换机，指定routingKey
+    @Bean
+    public Binding BINDING_QUEUE_INFORM_EMAIL(@Qualifier(QUEUE_INFORM_EMAIL) Queue queue,
+                                              @Qualifier(EXCHANGE_TOPICS_INFORM) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(ROUTINGKEY_EMAIL).noargs();
+    }
+
+    //TULING_MIAOSHA_QUEUE_MQ，配置死信队列需要的参数
+    @Bean(TULING_MIAOSHA_QUEUE_MQ)
+    public Queue TULING_MIAOSHA_QUEUE_MQ() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("x-dead-letter-exchange", DEAD_EXCHANGE);
+        map.put("x-dead-letter-routing-key", "dev");
+        return new Queue(TULING_MIAOSHA_QUEUE_MQ, true, false, false, map);
+    }
+
+    //    ROUTINGKEY_EMAIL队列绑定交换机，指定routingKey
+    @Bean
+    public Binding BINDING_TULING_MIAOSHA_QUEUE_MQ(@Qualifier(TULING_MIAOSHA_QUEUE_MQ) Queue queue,
+                                                   @Qualifier(EXCHANGE_TOPICS_INFORM) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(ROUTINGKEY_EMAIL).noargs();
+    }
+
+
+    @Bean(DEAD_EXCHANGE)
+    public Exchange dead_exchange() {
+        return ExchangeBuilder.directExchange(DEAD_EXCHANGE).durable(true).build();
+    }
+
+    @Bean(DEAD_QUEUE)
+    public Queue dead_routing_key() {
+        return QueueBuilder.durable("dead_queue").build();
+    }
+
+
+    @Bean(SIMPLE_QUEUE)
+    public Queue simple_queue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("x-dead-letter-exchange", DEAD_EXCHANGE);
+        map.put("x-dead-letter-routing-key", "dev");
+        return new Queue(SIMPLE_QUEUE, true, false, false, map);
+    }
+
+    //    ROUTINGKEY_EMAIL队列绑定交换机，指定routingKey
+    @Bean
+    public Binding BINDING_SIMPLE_QUEUE(@Qualifier(SIMPLE_QUEUE) Queue queue,
+                                        @Qualifier(EXCHANGE_TOPICS_INFORM) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(ROUTINGKEY_EMAIL).noargs();
+    }
+
+
+    @Bean("dead_bind")
+    public Binding dead_bind(@Qualifier("dead_queue") Queue queue, @Qualifier(DEAD_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with("dev").noargs();
+    }
 
 }
