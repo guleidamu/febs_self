@@ -25,12 +25,12 @@ public class FebsServerSystemApplication {
         SpringApplication.run(FebsServerSystemApplication.class, args);
     }
 
-    @Bean
-    public Redisson redisson() {
-        //此为单机模式
-        Config config = new Config();
-//        config.useSingleServer().setAddress("redis://8.140.152.182:6379").setPassword("meiliaichangge").setDatabase(5);
-        config.useSingleServer().setAddress("redis://127.0.0.1:6379").setDatabase(5);
-        return (Redisson) Redisson.create(config);
-    }
+//    @Bean
+//    public Redisson redisson() {
+//        //此为单机模式
+//        Config config = new Config();
+////        config.useSingleServer().setAddress("redis://8.140.152.182:6379").setPassword("meiliaichangge").setDatabase(5);
+////        config.useSingleServer().setAddress("redis://127.0.0.1:6379").setDatabase(5);
+//        return (Redisson) Redisson.create(config);
+//    }
 }
