@@ -152,6 +152,10 @@ public class MQReceiver {
     public void handlerMq(String msg, Channel channel, Message message) throws IOException {
         try {
             log.info(MQConfig.SIMPLE_QUEUE + "消息" + msg);
+
+            //一旦出错，则进入设置的死信队列
+            int a = 2 / 0;
+
             //业务处理代码
             TulingOrder tulingOrder = JSONObject.parseObject(msg, TulingOrder.class);
             log.info(MQConfig.SIMPLE_QUEUE + "消息转换成实体类" + tulingOrder);
@@ -174,27 +178,28 @@ public class MQReceiver {
         }
     }
 
-    @RabbitListener(queues = MQConfig.DEAD_QUEUE)
-    public void deadQueue(String msg, Channel channel, Message message) throws IOException {
-        try {
-            log.info(MQConfig.DEAD_QUEUE + "消息" + msg);
-            //业务处理代码
-//            TulingOrder tulingOrder = JSONObject.parseObject(msg, TulingOrder.class);
-//            log.info(MQConfig.SIMPLE_QUEUE + "消息转换成实体类" + tulingOrder);
-            //手动ACK
-            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-        } catch (Exception e) {
-//            if (message.getMessageProperties().getRedelivered()) {
-//                log.error("消息已重复处理失败,拒绝再次接收...", e);
-//                //方法拒绝deliveryTag对应的消息，第二个参数是否requeue，true则重新入队列(重新消费)，否则丢弃或者进入死信队列。
-//                channel.basicReject(message.getMessageProperties().getDeliveryTag(), false); // 拒绝消息
-////                channel.basicReject(message.getMessageProperties().getDeliveryTag(), true); // 拒绝消息
-//
-//            } else {
-//                log.error("消息即将再次返回队列处理...", e);
-//                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
-//            }
-        }
-    }
+//    @RabbitListener(queues = MQConfig.DEAD_QUEUE)
+//    public void deadQueue(String msg, Channel channel, Message message) throws IOException {
+//        try {
+//            log.info("死信队列消费数据");
+//            log.info(MQConfig.DEAD_QUEUE + "消息" + msg);
+//            //业务处理代码
+////            TulingOrder tulingOrder = JSONObject.parseObject(msg, TulingOrder.class);
+////            log.info(MQConfig.SIMPLE_QUEUE + "消息转换成实体类" + tulingOrder);
+//            //手动ACK
+//            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+//        } catch (Exception e) {
+////            if (message.getMessageProperties().getRedelivered()) {
+////                log.error("消息已重复处理失败,拒绝再次接收...", e);
+////                //方法拒绝deliveryTag对应的消息，第二个参数是否requeue，true则重新入队列(重新消费)，否则丢弃或者进入死信队列。
+////                channel.basicReject(message.getMessageProperties().getDeliveryTag(), false); // 拒绝消息
+//////                channel.basicReject(message.getMessageProperties().getDeliveryTag(), true); // 拒绝消息
+////
+////            } else {
+////                log.error("消息即将再次返回队列处理...", e);
+////                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+////            }
+//        }
+//    }
 
 }
