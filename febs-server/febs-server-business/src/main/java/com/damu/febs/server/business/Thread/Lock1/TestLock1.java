@@ -5,16 +5,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class TestLock1 {
     public static void main(String[] args) {
-//        Ticket ticket = new Ticket();
-//        new Thread(ticket, "1号窗口").start();
-//        new Thread(ticket, "2号窗口").start();
-//        new Thread(ticket, "3号窗口").start();
-        TicketThread meili0 = new TicketThread("Thread-0 ");
-        meili0.start();
-        TicketThread meili1 = new TicketThread("Thread-1 ");
-        meili1.start();
-        TicketThread meili2 = new TicketThread("Thread-2 ");
-        meili2.start();
+        Ticket ticket = new Ticket();
+        new Thread(ticket, "1号窗口").start();
+        new Thread(ticket, "2号窗口").start();
+        new Thread(ticket, "3号窗口").start();
+//        TicketThread meili0 = new TicketThread("Thread-0 ");
+//        meili0.start();
+//        TicketThread meili1 = new TicketThread("Thread-1 ");
+//        meili1.start();
+//        TicketThread meili2 = new TicketThread("Thread-2 ");
+//        meili2.start();
     }
 }
 
@@ -32,7 +32,7 @@ class Ticket implements Runnable {
                 if (tick > 0) {
                     System.out.println(Thread.currentThread().getName() + "完成售票，余票" + --tick);
                 }
-                System.out.println(">>>>>");
+//                System.out.println(">>>>>");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {

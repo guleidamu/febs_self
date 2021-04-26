@@ -1,0 +1,32 @@
+package com.damu.febs.server.system.quartz;
+
+import com.damu.febs.server.system.logclean.CleanManager;
+import com.damu.febs.server.system.utils.SpringContextJobUtil;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class LogCleanJob implements Job {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    @Override
+    public void execute(JobExecutionContext arg0)
+            throws JobExecutionException {
+        logger.debug("Log Clean Quartz execute start . . . . . . .");
+
+        // TODO 业务逻辑
+        /**
+         * 通过 自定义工具类 获取Spring容器中的实例bean
+         * 在quartz框架中，Job 是通过反射出来的实例，不受spring的管理，即使使用@Component注解，
+         * 将其标记为组件类，它也不会被注册到容器中，所以就无法直接通过自动注入IOC容器中的对象等
+         */
+        CleanManager cleanManager = (CleanManager) SpringContextJobUtil.getBean("cleanManager");
+        // 进行日志清理
+        cleanManager.cleanLogStart();
+
+        logger.debug("Log Clean Quartz execute end . . . . . . . .");
+    }
+}

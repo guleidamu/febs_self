@@ -8,6 +8,7 @@ import org.redisson.Redisson;
 import org.redisson.config.Config;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 //@EnableFebsAuthExceptionHandler
 //@EnableFebsServerProtect
 @MapperScan("com.damu.febs.server.system.mapper")
+@ServletComponentScan(basePackages = "com.damu.febs.server.system.listener")
 @FebsCloudApplication
 public class FebsServerSystemApplication {
 
