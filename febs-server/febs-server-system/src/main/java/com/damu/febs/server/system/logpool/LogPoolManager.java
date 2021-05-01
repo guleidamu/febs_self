@@ -38,7 +38,7 @@ public class LogPoolManager {
     /**
      * 线程睡眠时间，具体时间需要结合项目实际情况，单位毫秒
      */
-    private int SLEEP_TIME = 500;
+    private int SLEEP_TIME = 10000;
 
     /**
      * 日志插入执行的最大的时间间隔，单位毫秒

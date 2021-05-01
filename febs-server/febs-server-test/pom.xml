@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
     <parent>
         <groupId>com.damu</groupId>
         <artifactId>febs-server</artifactId>
@@ -13,6 +14,23 @@
     <artifactId>febs-server-test</artifactId>
     <name>FEBS-Server-Test</name>
     <description>FEBS-Server-Test测试服务模块</description>
+
+    <!--<dependencies>-->
+
+    <!--</dependencies>-->
+    <dependencies>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.18</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
