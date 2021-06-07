@@ -6,6 +6,7 @@ import com.damu.febs.common.annotation.EnableFebsOauth2FeignClient;
 import com.damu.febs.common.annotation.EnableFebsServerProtect;
 import com.damu.febs.common.annotation.FebsCloudApplication;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -14,12 +15,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @EnableFeignClients
 //@EnableDiscoveryClient
-//@SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 //@EnableFebsAuthExceptionHandler
 //@EnableFebsOauth2FeignClient
 //@EnableFebsServerProtect
+@EnableRabbit
 @MapperScan("com.damu.febs.server.test.mapper")
 @FebsCloudApplication
 public class FebsServerTestApplication {

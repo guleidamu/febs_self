@@ -36,4 +36,9 @@ public class TestController {
     public String hello(String name){
         return this.helloService.hello(name);
     }
+
+    @GetMapping("helloM")
+    public String helloM(String name){
+        return "helloM";
+    }
 }
