@@ -1,0 +1,47 @@
+#server:
+#  port: 5601
+
+
+spring:
+  application:
+    name: FEBS-Server-Job
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.url}:3809
+      config:
+        server-addr: ${nacos.url}:3809
+        group: DEFAULT_GROUP
+        prefix: febs-server-job
+        file-extension: yaml
+
+#spring:
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: GMT+8
+#  datasource:
+#    dynamic:
+#      # 是否开启 SQL日志输出，生产环境建议关闭，有性能损耗
+#      p6spy: true
+#      hikari:
+#        connection-timeout: 30000
+#        max-lifetime: 1800000
+#        max-pool-size: 15
+#        min-idle: 5
+#        connection-test-query: select 1
+#        pool-name: FebsHikariCP
+#      # 配置默认数据源
+#      primary: base
+#      datasource:
+#        # 数据源-1，名称为 base
+#        base:
+#          username: root
+#          password: aiku1212
+#          driver-class-name: com.mysql.cj.jdbc.Driver
+#          url: jdbc:mysql://${mysql.url}:3306/febs_cloud_base?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
+#        # 数据源-2，名称为 job
+#        job:
+#          username: root
+#          password: aiku1212
+#          driver-class-name: com.mysql.cj.jdbc.Driver
+#          url: jdbc:mysql://${mysql.url}:3306/febs_cloud_job?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8

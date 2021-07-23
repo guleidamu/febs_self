@@ -12,7 +12,9 @@
         <module name="febs-eureka" />
         <module name="febs-gateway" />
         <module name="febs-server-business" />
+        <module name="febs-server-job" />
         <module name="febs-server-system" />
+        <module name="febs-server-task" />
         <module name="febs-server-test" />
       </profile>
     </annotationProcessing>
@@ -25,7 +27,9 @@
       <module name="febs-gateway" target="1.8" />
       <module name="febs-server" target="1.8" />
       <module name="febs-server-business" target="1.8" />
+      <module name="febs-server-job" target="1.8" />
       <module name="febs-server-system" target="1.8" />
+      <module name="febs-server-task" target="1.8" />
       <module name="febs-server-test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -36,7 +40,9 @@
       <module name="febs-eureka" options="-parameters" />
       <module name="febs-gateway" options="-parameters" />
       <module name="febs-server-business" options="-parameters" />
+      <module name="febs-server-job" options="-parameters" />
       <module name="febs-server-system" options="-parameters" />
+      <module name="febs-server-task" options="-parameters" />
       <module name="febs-server-test" options="-parameters" />
     </option>
   </component>

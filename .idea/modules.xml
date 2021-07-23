@@ -10,7 +10,9 @@
       <module fileurl="file://$PROJECT_DIR$/febs-gateway/febs-gateway.iml" filepath="$PROJECT_DIR$/febs-gateway/febs-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/febs-server/febs-server.iml" filepath="$PROJECT_DIR$/febs-server/febs-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/febs-server/febs-server-business/febs-server-business.iml" filepath="$PROJECT_DIR$/febs-server/febs-server-business/febs-server-business.iml" />
+      <module fileurl="file://$PROJECT_DIR$/febs-server/febs-server-task/febs-server-job.iml" filepath="$PROJECT_DIR$/febs-server/febs-server-task/febs-server-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/febs-server/febs-server-system/febs-server-system.iml" filepath="$PROJECT_DIR$/febs-server/febs-server-system/febs-server-system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/febs-server/febs-server-task/febs-server-task.iml" filepath="$PROJECT_DIR$/febs-server/febs-server-task/febs-server-task.iml" />
       <module fileurl="file://$PROJECT_DIR$/febs-server/febs-server-test/febs-server-test.iml" filepath="$PROJECT_DIR$/febs-server/febs-server-test/febs-server-test.iml" />
     </modules>
   </component>

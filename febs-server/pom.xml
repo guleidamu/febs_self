@@ -7,6 +7,7 @@
         <module>febs-server-system</module>
         <module>febs-server-test</module>
         <module>febs-server-business</module>
+        <module>febs-server-task</module>
     </modules>
 
     <parent>

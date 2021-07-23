@@ -9,6 +9,7 @@
     <file url="file://$PROJECT_DIR$/febs-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-server/febs-server-business" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-server/febs-server-system" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/febs-server/febs-server-task" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/febs-server/febs-server-test" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
